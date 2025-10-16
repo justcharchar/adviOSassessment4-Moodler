@@ -88,6 +88,34 @@ class JournalViewModel: ObservableObject {
          
     }
     
+    // MARK: Pexels API - Search Function
     
-    
+    // Function to search for images
+    func searchPexelsImages(query: String, completion: @escaping ([Photo]) -> Void) {
+            guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                completion([])
+                return
+            }
+
+            let apiKey = "ah8DHRORUnGRKdYXgSb7AxvHHrnxIN9asXZvm2RsgxjOGUjSvr0PFzf0"
+            let urlString = "https://api.pexels.com/v1/search?query=\(encodedQuery)&per_page=20"
+            guard let url = URL(string: urlString) else { completion([]); return }
+
+            var request = URLRequest(url: url)
+            request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else { completion([]); return }
+                do {
+                    let decoded = try JSONDecoder().decode(PexelsResponse.self, from: data)
+                    DispatchQueue.main.async {
+                        completion(decoded.photos)
+                    }
+                } catch {
+                    print("JSON parse error: \(error)")
+                    DispatchQueue.main.async { completion([]) }
+                }
+            }.resume()
+        }
+
 }
