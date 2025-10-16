@@ -13,7 +13,7 @@ struct ContentView: View {
         Text("Hello, World!")
     }
 }
-        
+
 #Preview {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
