@@ -45,7 +45,7 @@ class JournalViewModel: ObservableObject {
         }
     }
     
-    // MARK: Adding and Saving Journals
+    // MARK: Adding, Saving and Deleting Journals
     
     // Creating a journal draft before saving
     func addJournal() {
@@ -71,6 +71,16 @@ class JournalViewModel: ObservableObject {
             print("Error saving draft: \(error)")
         }
         draftJournal = nil
+    }
+    
+    // Deleting a journal entry
+    func deleteJournal(_ journal: JournalEntry) {
+        context.delete(journal)
+        saveContext()
+        
+        if let index = entries.firstIndex(of: journal) {
+            entries.remove(at: index)
+        }
     }
     
     // MARK: Setting Favourite Journals
