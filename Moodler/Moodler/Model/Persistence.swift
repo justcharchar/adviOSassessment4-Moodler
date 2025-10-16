@@ -42,31 +42,4 @@ struct PersistenceController {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
     
-    // Fetching Journal Entries
-    func fetchJournals() -> [JournalEntry] {
-        let context = container.viewContext
-        let request: NSFetchRequest<JournalEntry> = JournalEntry.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \JournalEntry.date, ascending: false)]
-
-        do {
-            return try context.fetch(request)
-        } catch {
-            print("Fetch error: \(error)")
-            return []
-        }
-    }
-    
-    // Saving data
-    func saveContext() {
-        let context = container.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-        
-    }
 }
