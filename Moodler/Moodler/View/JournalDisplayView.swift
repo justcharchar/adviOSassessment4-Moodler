@@ -71,14 +71,7 @@ struct JournalDisplayView: View {
                     }
                     Divider()
                     
-//                    // Displaying journal location
-//                    Label {
-//                        Text((journal.placeName?.isEmpty == false ? journal.placeName! : "Location not set"))
-//                            .font(.caption)
-//                            .foregroundColor(.blue)
-//                    } icon: {
-//                        Image(systemName: "mappin.and.ellipse")
-//                    }
+                   
                     
                 }
                
