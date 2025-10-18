@@ -2,7 +2,7 @@
 //  JournalDetailView.swift
 //  Moodler
 //
-//  Created by Chloe on 15/10/2025.
+//  Created by Chloe on 18/10/2025.
 //
 
 import SwiftUI
@@ -17,128 +17,130 @@ struct JournalDetailView: View {
     @State private var showImagePicker: Bool = false
     @State private var coverImageURL: String?
     @State var showDatePicker: Bool = false
+    @State var showDeleteAlert: Bool = false
     
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
+
+        ScrollView {
+            
+            VStack(alignment: .leading, spacing: 16) {
                 
-                ZStack(alignment: .bottomLeading) {
-                    if let urlString = coverImageURL, let url = URL(string: urlString) {
-                        AsyncImage(url: url) { image in
-                            image.resizable()
-                                //.scaledToFill()
-                                //.clipped()
-                                .frame(height: 150)
-                            
-                        } placeholder: {
-                            Color.gray.opacity(0.2)
-                                .frame(height: 150)
-                        }
-                        
-                    } else {
-                        Color.blue.opacity(0.2)
-                            .frame(height: 150)
-                            .border(Color.gray.opacity(0.3), width: 0.2)
+                // MARK: Top Menu
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.title3)
+                            .padding()
+                            .background(Circle().fill(Color.gray.opacity(0.1)))
                     }
-                    VStack(alignment: .leading, spacing: 20) {
-                        HStack {
-                            TextField("Title", text: Binding (
-                                get: { journal.title ?? ""},
-                                set: { journal.title = $0 }))
-                            .font(.title)
-                            .bold()
-                            
-                            Spacer()
-                            
-                            // Favourite Button -> this will go to FavouriteJournalView
-                            Button {
-                                withAnimation(.bouncy) {
-                                    journalModel.toggleFavourite(for: journal)
-                                }
-                            } label: {
-                                Image(systemName: journalModel.isFavourite(journal: journal) ? "heart.fill" : "heart")
-                                    .font(.title)
-                                    .foregroundColor(.pink)
-                            }
-                        }
-                        
-                
+                    Spacer()
+                    
+                    Button {
+                        showDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.title3)
+                            .padding()
+                            .foregroundColor(.black)
+                            .background(Circle().fill(Color.gray.opacity(0.1)))
                     }
-                    .padding(.horizontal)
-                    .background(.white.opacity(0.2))
+                    .alert(isPresented: $showDeleteAlert) {
+                        Alert(
+                            title: Text("Delete Journal"),
+                            message: Text("Are you sure you want to delete this journal? This action cannot be undone."),
+                            primaryButton: .destructive(Text("Delete")) {
+                                journalModel.deleteJournal(journal)
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }
+                    
+                    Button {
+                       withAnimation(.bouncy) {
+                           journalModel.toggleFavourite(for: journal)
+                       }
+                   } label: {
+                       Image(systemName: journalModel.isFavourite(journal: journal) ? "heart.fill" : "heart")
+                           .font(.title3)
+                           .foregroundColor(.pink)
+                           .padding()
+                           .background(Circle().fill(Color.gray.opacity(0.1)))
+                   }
+                    // NEED TO DO
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.title3)
+                            .padding()
+                            .background(Circle().fill(Color.gray.opacity(0.1)))
+                    }
+               
                 }
-                VStack(alignment: .leading) {
+                
+                VStack(spacing: 16) {
+                    Text(DateFormatStyle(for: journal.date ?? Date()))
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.gray)
+                    
+                        
+                    
+                    TextField("Title", text: Binding(
+                        get: { journal.title ?? "" },
+                        set: { journal.title = $0 }
+                    ))
+                    .multilineTextAlignment(.center)
+                    .font(.title.bold())
+                    .padding(.vertical, 6)
+                    
+                    Divider()
+                    
                     HStack {
-                        // Button that allows users to change the cover image of the journal
+                        // MOOD ANALYSIS - MACHINE LEARNING
                         Button {
-                            showImagePicker = true
+                            
                         } label: {
-                            HStack {
-                                Image(systemName: "photo.on.rectangle.angled")
-                                Text("Change Cover Image")
-                            }
-                            .font(.caption)
-                            .padding(4)
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(10)
+                            Text("Mood Analysis")
+                            Image(systemName: "brain")
                         }
+                        .font(.subheadline)
+                        .foregroundColor(.purple)
+                        .padding(8)
+                        .background(Color.purple.opacity(0.1))
+                        .cornerRadius(15)
                         
-                        Spacer ()
+                        Spacer()
                         
-                        // Save journal button
                         Button {
                             journalModel.saveDraft()
                             dismiss()
-                            
                         } label: {
-                            Text("Save")
-                                .font(.subheadline)
-                                .frame(width: 70, height: 25)
-                                .background(Color.blue.opacity(0.2))
-                                
-                                .cornerRadius(8)
+                            Text("Save Entry")
                         }
-                    
+                        .font(.subheadline)
+                        .foregroundStyle(.green)
+                        .padding(8)
+                        .background(Color.green.opacity(0.1))
+                        .cornerRadius(15)
                     }
                     
-                    HStack {
-                        Button {
-                            showDatePicker.toggle()
-                        } label: {
-                            Image(systemName: "calendar")
-                            Text(DateFormatStyle(for: journal.date ?? Date()))
-                            Image(systemName: "chevron.down")
-                            
-                        }
-                    }
-                    .font(.caption)
-                    .padding(4)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
                     
-                    Divider()
-                    // Journal content
-                    TextEditor(text: Binding (
-                        get: { journal.content ?? ""},
-                        set: { journal.content = $0 }
-                    ))
-                    .frame(height: 550)
+                    // IMAGE SELECTION THING HERE
                     
-                    //.border(.gray.opacity(0.25))
+                    
+                    // CONTENT 
                     
                 }
-                .padding(.horizontal)
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePickerView(journalModel: journalModel) { photo in
-                        journal.imageURL = photo.src.medium
-                        coverImageURL = photo.src.medium
-                        journalModel.saveContext()
-                    }
-                }
-                
             }
+            .padding(.horizontal)
+          
+            
         }
+    
     }
     
     
@@ -146,7 +148,7 @@ struct JournalDetailView: View {
 
 private func DateFormatStyle(for date: Date) -> String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMMM d, yyyy"
+    formatter.dateFormat = "- MMMM d, yyyy -"
     return formatter.string(from: date)
 }
 
