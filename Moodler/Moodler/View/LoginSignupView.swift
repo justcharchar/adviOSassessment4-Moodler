@@ -1,5 +1,5 @@
 //
-//  EntryView.swift
+//  LoginSignupView.swift
 //  Moodler
 //
 //  Created by Owen Herianto on 17/10/2025.
@@ -11,18 +11,21 @@ struct LoginSignupView: View {
     @AppStorage("isSignedUp") private var isSignedUp = false
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     
-    // Profile
     @AppStorage("username") private var username = ""
     @AppStorage("bio") private var bio = ""
     @AppStorage("goal") private var goal = ""
-    @AppStorage("age") private var age = ""
+    @AppStorage("birthdate") private var birthdate = Date.distantPast
+    @AppStorage("joinedDate") private var joinedDate = ""
     @AppStorage("profileImageData") private var profileImageData: Data?
+    @AppStorage("password") private var savedPassword = ""
     
     @State private var isSignup = false
     @State private var inputUsername = ""
     @State private var password = ""
     @State private var tempImage: UIImage? = nil
     @State private var showImagePicker = false
+    @State private var tempBirthdate = Date()
+    @State private var showLoginError = false
     
     var body: some View {
         NavigationView {
@@ -60,14 +63,13 @@ struct LoginSignupView: View {
                                 }
                         }
                     }
-                    
-                    // MARK: - Title
+
                     Text(isSignup ? "Create Account" : "Welcome Back")
                         .font(.largeTitle)
                         .bold()
                         .padding(.top, isSignup ? 0 : 80)
                     
-                    // MARK: - Signup Fields
+                    // MARK: - Signup
                     if isSignup {
                         TextField("Username", text: $username)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -81,9 +83,8 @@ struct LoginSignupView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
-                        TextField("Age (optional)", text: $age)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.numberPad)
+                        DatePicker("Birthdate", selection: $tempBirthdate, displayedComponents: .date)
+                            .datePickerStyle(.wheel)
                             .padding(.horizontal)
                     } else {
                         TextField("Username", text: $inputUsername)
@@ -91,24 +92,12 @@ struct LoginSignupView: View {
                             .padding(.horizontal)
                     }
                     
-                    // MARK: - Password Field
                     SecureField("Password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
-                    // MARK: - Button
-                    Button(action: {
-                        if isSignup {
-                            if !username.isEmpty && !password.isEmpty {
-                                isSignedUp = true
-                                isLoggedIn = true
-                            }
-                        } else {
-                            if !inputUsername.isEmpty && !password.isEmpty {
-                                isLoggedIn = true
-                            }
-                        }
-                    }) {
+                    // MARK: - Pop up incorrect
+                    Button(action: handleAction) {
                         Text(isSignup ? "Sign Up" : "Log In")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -119,6 +108,9 @@ struct LoginSignupView: View {
                             .padding(.horizontal)
                     }
                     .padding(.top, 10)
+                    .alert("Incorrect username or password", isPresented: $showLoginError) {
+                        Button("OK", role: .cancel) { }
+                    }
                     
                     // MARK: - Switch Button
                     Button(action: {
@@ -139,16 +131,41 @@ struct LoginSignupView: View {
         }
     }
     
-    // MARK: - Reset Fields When Switching Modes
-    func clearForm() {
+    // MARK: - Handle Login / Signup
+    private func handleAction() {
+        if isSignup {
+            if !username.isEmpty && !password.isEmpty {
+                savedPassword = password
+                birthdate = tempBirthdate
+                joinedDate = formattedDate(Date())
+                
+                isSignedUp = true
+                isLoggedIn = true
+            }
+        } else {
+            if inputUsername == username && password == savedPassword {
+                isLoggedIn = true
+            } else {
+                showLoginError = true
+            }
+        }
+    }
+
+    private func clearForm() {
         password = ""
         if isSignup {
             username = ""
             bio = ""
             goal = ""
-            age = ""
+            tempBirthdate = Date()
         } else {
             inputUsername = ""
         }
+    }
+    
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
     }
 }
