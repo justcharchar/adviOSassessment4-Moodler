@@ -6,24 +6,35 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    @AppStorage("isSignedUp") private var isSignedUp = false
-    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    @StateObject private var journalModel = JournalViewModel()
 
     var body: some View {
-        if !hasSeenOnboarding {
-            OnboardingView()
-        } else if !isLoggedIn {
-            LoginSignupView()
-        } else {
-            MainTabView()
+        
+        TabView {
+            HomeView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+            
+            JournalListView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "book.pages.fill")
+                    Text("Journals")
+                }
+            
+            FavouriteJournalView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "heart")
+                    Text("Favourite")
+                }
         }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
-
