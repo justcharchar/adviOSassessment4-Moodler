@@ -69,6 +69,8 @@ struct JournalDetailView: View {
                            .padding()
                            .background(Circle().fill(Color.gray.opacity(0.1)))
                    }
+                    
+                    
                     // NEED TO DO
                     Button {
                         
@@ -129,11 +131,68 @@ struct JournalDetailView: View {
                     }
                     
                     
-                    // IMAGE SELECTION THING HERE
+                    ZStack(alignment: .bottomTrailing) {
+                        
+                        if let urlString = coverImageURL, let url = URL(string: urlString) {
+                            AsyncImage(url: url) { image in
+                                image.resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .cornerRadius(15)
+                                    .clipped()
+                            } placeholder: {
+                                Color.gray.opacity(0.3)
+                                    .frame(height: 200)
+                            }
+                            
+                            Button {
+                                showImagePicker = true
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                                    .padding(5)
+                                    .background(Circle().fill(Color.white.opacity(0.8)))
+                            }
+                            .padding(.trailing, 10)
+                            .padding(.bottom, 10)
+
+                        } else {
+                            HStack {
+                                Button {
+                                    showImagePicker = true
+                                } label: {
+                                    Image(systemName: "photo")
+                                    Text("Select Photo")
+                                }
+                                .foregroundStyle(.teal)
+                                .frame(maxWidth: .infinity)
+                            }
+                            .frame(height: 200)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(15)
+                        }
+                    }
+                    .sheet(isPresented: $showImagePicker) {
+                        ImagePickerView(journalModel: journalModel) { photo in
+                            journal.imageURL = photo.src.large
+                            coverImageURL = photo.src.large
+                            journalModel.saveContext()
+                        }
+                    }
                     
-                    
-                    // CONTENT 
-                    
+                    // CONTENT
+                    TextEditor(text: Binding (
+                        get: { journal.content ?? ""},
+                        set: { journal.content = $0 }
+                    ))
+                    .scrollContentBackground(.hidden)
+                    .frame(height: 550)
+                    .padding(4)
+                    .background(Color.gray.opacity(0.05))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray.opacity(0.05), lineWidth: 1)
+                    )
+                    .cornerRadius(15)
                 }
             }
             .padding(.horizontal)
