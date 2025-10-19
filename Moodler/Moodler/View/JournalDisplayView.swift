@@ -21,8 +21,16 @@ struct JournalDisplayView: View {
         HStack(spacing: 16) {
                     
             // MARK: - Image Display
-            if let urlString = journal.imageURL,
-               let url = URL(string: urlString) {
+            if let data = journal.imageData, let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 100)
+                    .cornerRadius(15)
+                    .clipped()
+                
+                
+            } else if let urlString = journal.imageURL, let url = URL(string: urlString){
                 AsyncImage(url: url) { image in
                     image.resizable()
                         .scaledToFill()
@@ -30,21 +38,26 @@ struct JournalDisplayView: View {
                         .cornerRadius(12)
                         .clipped()
                 } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(width: 100, height: 100)
-                        .cornerRadius(12)
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.blue.opacity(0.1))
+                            .frame(width: 100, height: 00)
+                            .cornerRadius(12)
+                        ProgressView()
+                            
+                    }
                 }
             } else {
                 // Default placeholder if no image exists
-                Rectangle()
-                    .fill(Color.blue.opacity(0.1))
-                    .frame(width: 100, height: 100)
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                    )
-                    .cornerRadius(12)
+                ZStack {
+                    Rectangle()
+                        .fill(Color.blue.opacity(0.5))
+                        .frame(width: 100, height: 100)
+                        .cornerRadius(12)
+                    
+                    Image(systemName: "photo")
+                        
+                }
             }
             
             // MARK: - Journal Info
@@ -58,7 +71,7 @@ struct JournalDisplayView: View {
                 if let date = journal.date {
                     Text(date, style: .date)
                         .font(.caption)
-                        .foregroundColor(.blue)
+                        //.foregroundColor(.blue)
                 }
                 
                 Text(journal.content ?? "No content available.")
@@ -66,6 +79,7 @@ struct JournalDisplayView: View {
                     .foregroundColor(.secondary)
                     .lineLimit(3)
                     .padding(.top, 2)
+                    .multilineTextAlignment(.leading)
                 
                 Spacer()
                 
