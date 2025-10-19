@@ -25,7 +25,6 @@ struct JournalDetailView: View {
     var body: some View {
 
         ScrollView {
-            
             VStack(alignment: .leading, spacing: 16) {
                 
                 // MARK: Top Menu
@@ -42,6 +41,7 @@ struct JournalDetailView: View {
                     
                     Button {
                         showDeleteAlert = true
+                        
                     } label: {
                         Image(systemName: "trash")
                             .font(.title3)
@@ -55,6 +55,7 @@ struct JournalDetailView: View {
                             message: Text("Are you sure you want to delete this journal? This action cannot be undone."),
                             primaryButton: .destructive(Text("Delete")) {
                                 journalModel.deleteJournal(journal)
+                                dismiss()
                             },
                             secondaryButton: .cancel()
                         )
@@ -131,6 +132,7 @@ struct JournalDetailView: View {
                         .background(Color.green.opacity(0.1))
                         .cornerRadius(15)
                     }
+                   
                     
                     
                     ZStack(alignment: .topTrailing) {
@@ -167,8 +169,7 @@ struct JournalDetailView: View {
                                 Color.gray.opacity(0.3)
                                     .frame(height: 200)
                             }
-                            
-                            
+
                             Button {
                                 selectedUIImage = nil
                                 coverImageURL = nil
@@ -198,31 +199,19 @@ struct JournalDetailView: View {
                                 }
                                
                             }
-                            
-                            
                             .frame(height: 200)
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(15)
-                            
-                            
-                            
-                            
                         }
                        
                     }
-                    .sheet(isPresented: $showUserLibraryPicker) {
-                        ImagePicker(image: $selectedUIImage)
-                    }
-                    .sheet(isPresented: $showImageSearchPicker) {
-                        ImagePickerView(journalModel: journalModel) { photo in
-                            journal.imageURL = photo.src.large
-                            coverImageURL = photo.src.large
-                            journalModel.saveContext()
-                        }
+                    
+                    .onAppear {
+                        coverImageURL = journal.imageURL
                     }
                     
                     // CONTENT
-                    TextEditor(text: Binding (
+                    TextEditor(text: Binding ( 
                         get: { journal.content ?? ""},
                         set: { journal.content = $0 }
                     ))
@@ -236,11 +225,23 @@ struct JournalDetailView: View {
                     )
                     .cornerRadius(15)
                 }
+                .sheet(isPresented: $showUserLibraryPicker) {
+                    ImagePicker(image: $selectedUIImage)
+                }
+                .sheet(isPresented: $showImageSearchPicker) {
+                    ImagePickerView(journalModel: journalModel) { photo in
+                        journal.imageURL = photo.src.large
+                        coverImageURL = photo.src.large
+                        journalModel.saveContext()
+                    }
+                }
+                
             }
             .padding(.horizontal)
           
             
         }
+        .navigationBarBackButtonHidden(true)
     
     }
     

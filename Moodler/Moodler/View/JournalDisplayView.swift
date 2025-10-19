@@ -18,38 +18,73 @@ struct JournalDisplayView: View {
     @State private var showDeleteAlert: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading){
-            VStack(alignment: .leading, spacing: 8) {
+        HStack(spacing: 16) {
+                    
+            // MARK: - Image Display
+            if let urlString = journal.imageURL,
+               let url = URL(string: urlString) {
+                AsyncImage(url: url) { image in
+                    image.resizable()
+                        .scaledToFill()
+                        .frame(width: 100, height: 100)
+                        .cornerRadius(12)
+                        .clipped()
+                } placeholder: {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(width: 100, height: 100)
+                        .cornerRadius(12)
+                }
+            } else {
+                // Default placeholder if no image exists
+                Rectangle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 100, height: 100)
+                    .overlay(
+                        Image(systemName: "photo")
+                            .foregroundColor(.gray)
+                    )
+                    .cornerRadius(12)
+            }
+            
+            // MARK: - Journal Info
+            VStack(alignment: .leading, spacing: 6) {
+                
+                Text(journal.title?.isEmpty == false ? journal.title! : "Untitled")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                
+                if let date = journal.date {
+                    Text(date, style: .date)
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+                
+                Text(journal.content ?? "No content available.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+                    .padding(.top, 2)
+                
+                Spacer()
                 
                 HStack {
-                    // Displaying Journal title
-                    Text((journal.title?.isEmpty == false ? journal.title! : "Untitled"))
-                        .font(.title3)
-                        .bold()
-                        .foregroundColor(.black)
-                        .lineLimit(1)
-                    
-                    Spacer()
-                    
-                    // Favourite button to allow users to favourite journals out of detailed view
                     Button(action: {
-                        journalModel.toggleFavourite(for: journal)
+                        withAnimation {
+                            journalModel.toggleFavourite(for: journal)
+                        }
                     }) {
                         Image(systemName: journalModel.isFavourite(journal: journal) ? "heart.fill" : "heart")
-                            .font(.title3)
                             .foregroundColor(.pink)
                     }
-                    
-                    // Delete button
+
                     Button(action: {
                         showDeleteAlert = true
                     }) {
                         Image(systemName: "trash")
-                            .font(.title3)
                             .foregroundColor(.red)
                     }
-                    .padding(.top, 4)
-                    // Making users confirm their decision in case they have accidentally clicked delete
                     .alert(isPresented: $showDeleteAlert) {
                         Alert(
                             title: Text("Delete Journal"),
@@ -61,35 +96,21 @@ struct JournalDisplayView: View {
                         )
                     }
                 }
-                
-                HStack {
-                    // Displaying journal date
-                    if let date = journal.date {
-                        Text(date, style: .date)
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                    }
-                    Divider()
-                    
-                   
-                    
-                }
-               
-                // Preview of the content (only displays 3 lines)
-                Text(journal.content ?? "No content available.")
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                    .lineLimit(3)
+                .font(.subheadline)
             }
-            .padding()
-            .background(.white)
-            .cornerRadius(16)
-            .shadow(radius: 8)
+            
+            Spacer()
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: .gray.opacity(0.2), radius: 6)
         .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.vertical, 6)
     }
+    
 }
+
 
 
 
