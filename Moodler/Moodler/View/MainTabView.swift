@@ -25,9 +25,9 @@ struct MainTabView: View {
                     Label("Insights", systemImage: "chart.bar")
                 }
             
-            SettingsView()
+            Text("Favourites")
                 .tabItem {
-                    Label("Settings", systemImage: "gear")
+                    Label("Favourites", systemImage: "heart.fill")
                 }
 
         }

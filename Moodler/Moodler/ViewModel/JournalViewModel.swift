@@ -58,13 +58,13 @@ class JournalViewModel: ObservableObject {
     }
     
     // Saving journal draft
-    func saveDraft() {
+    func saveDraft(for journal: JournalEntry? = nil) {
         guard let journal = draftJournal else { return }
         
         if !entries.contains(journal) {
             entries.insert(journal, at: 0)
+
         }
-        
         do {
             try context.save()
         } catch {

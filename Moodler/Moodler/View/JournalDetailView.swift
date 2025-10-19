@@ -18,8 +18,10 @@ struct JournalDetailView: View {
     @State private var showUserLibraryPicker: Bool = false
     @State private var selectedUIImage: UIImage?
     @State private var coverImageURL: String?
+    @State private var showShareSheet = false
     @State var showDatePicker: Bool = false
     @State var showDeleteAlert: Bool = false
+    
  
     
     var body: some View {
@@ -29,6 +31,8 @@ struct JournalDetailView: View {
                 
                 // MARK: Top Menu
                 HStack {
+                    
+                    // Back button
                     Button {
                         dismiss()
                     } label: {
@@ -37,8 +41,10 @@ struct JournalDetailView: View {
                             .padding()
                             .background(Circle().fill(Color.gray.opacity(0.1)))
                     }
+                    
                     Spacer()
                     
+                    // Delete Button
                     Button {
                         showDeleteAlert = true
                         
@@ -49,6 +55,8 @@ struct JournalDetailView: View {
                             .foregroundColor(.black)
                             .background(Circle().fill(Color.gray.opacity(0.1)))
                     }
+                    
+                    // Delete Confirmation
                     .alert(isPresented: $showDeleteAlert) {
                         Alert(
                             title: Text("Delete Journal"),
@@ -61,6 +69,7 @@ struct JournalDetailView: View {
                         )
                     }
                     
+                    // Favourite Button
                     Button {
                        withAnimation(.bouncy) {
                            journalModel.toggleFavourite(for: journal)
@@ -74,26 +83,33 @@ struct JournalDetailView: View {
                    }
                     
                     
-                    // NEED TO DO
+                    // Share Button
                     Button {
-                        
+                        showShareSheet = true
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                             .font(.title3)
                             .padding()
                             .background(Circle().fill(Color.gray.opacity(0.1)))
                     }
-               
+                    .disabled((journal.title ?? "").isEmpty && (journal.content ?? "").isEmpty)
+                    .sheet(isPresented: $showShareSheet) {
+                        ShareSheet(activityItems: ["\(journal.title ?? "Untitled")\n\n\(journal.content ?? "No content.")"])
+                    }
+
                 }
                 
+                
+                
                 VStack(spacing: 16) {
+                    
+                    // Journal Date
                     Text(DateFormatStyle(for: journal.date ?? Date()))
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.gray)
-                    
-                        
-                    
+                     
+                    // Journal Title
                     TextField("Title", text: Binding(
                         get: { journal.title ?? "" },
                         set: { journal.title = $0 }
@@ -134,22 +150,24 @@ struct JournalDetailView: View {
                     }
                    
                     
+                    // MARK: Inserting image into journal
                     
                     ZStack(alignment: .topTrailing) {
-                        
-                        if let uiImage = selectedUIImage {
-                            
-                            // Show the selected image
+                
+                        // Picking a photo from user library
+                        if let data = journal.imageData, let uiImage = UIImage(data: data) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(height: 200)
                                 .cornerRadius(15)
                                 .clipped()
-
+                            
+                            // Removing the photo
                             Button {
                                 selectedUIImage = nil
-                                coverImageURL = nil
+                                journal.imageData = nil
+                                journalModel.saveContext()
                             } label: {
                                 Image(systemName: "xmark")
                                     .padding(7)
@@ -157,7 +175,8 @@ struct JournalDetailView: View {
                                     .shadow(radius: 2)
                             }
                             .padding([.top, .trailing], 8)
-  
+                        
+                            // Picking a photo from image API
                         } else if let urlString = coverImageURL, let url = URL(string: urlString) {
                             AsyncImage(url: url) { image in
                                 image.resizable()
@@ -170,9 +189,12 @@ struct JournalDetailView: View {
                                     .frame(height: 200)
                             }
 
+                            // Removing the photo
                             Button {
-                                selectedUIImage = nil
                                 coverImageURL = nil
+                                journal.imageURL = nil
+                                journalModel.saveContext()
+ 
                             } label: {
                                 Image(systemName: "xmark")
                                     .padding(7)
@@ -182,6 +204,8 @@ struct JournalDetailView: View {
                             .padding([.top, .trailing], 8)
 
                         } else {
+                            
+                            // Placeholder
                             VStack(spacing: 30) {
                                 Button {
                                     showUserLibraryPicker = true
@@ -203,14 +227,13 @@ struct JournalDetailView: View {
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(15)
                         }
-                       
                     }
                     
                     .onAppear {
                         coverImageURL = journal.imageURL
                     }
                     
-                    // CONTENT
+                    // MARK: Journal Content
                     TextEditor(text: Binding (
                         get: { journal.content ?? ""},
                         set: { journal.content = $0 }
@@ -225,9 +248,20 @@ struct JournalDetailView: View {
                     )
                     .cornerRadius(15)
                 }
+                
+                // Image picker for user library
                 .sheet(isPresented: $showUserLibraryPicker) {
                     ImagePicker(image: $selectedUIImage)
+                        .onDisappear {
+                            if let selectedUIImage = selectedUIImage,
+                               let data = selectedUIImage.jpegData(compressionQuality: 0.8) {
+                                journal.imageData = data
+                                journalModel.saveContext()
+                            }
+                        }
                 }
+                
+                // Image picker for image API
                 .sheet(isPresented: $showImageSearchPicker) {
                     ImagePickerView(journalModel: journalModel) { photo in
                         journal.imageURL = photo.src.large
@@ -248,6 +282,7 @@ struct JournalDetailView: View {
     
 }
 
+// Date display style
 private func DateFormatStyle(for date: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "- MMMM d, yyyy -"
