@@ -211,7 +211,7 @@ struct JournalDetailView: View {
                     }
                     
                     // CONTENT
-                    TextEditor(text: Binding ( 
+                    TextEditor(text: Binding (
                         get: { journal.content ?? ""},
                         set: { journal.content = $0 }
                     ))
