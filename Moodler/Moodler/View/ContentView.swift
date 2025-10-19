@@ -9,8 +9,29 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+    @StateObject private var journalModel = JournalViewModel()
+
     var body: some View {
-        Text("Hello, World!")
+        
+        TabView {
+            HomeView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+            
+            JournalListView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "book.pages.fill")
+                    Text("Journals")
+                }
+            
+            FavouriteJournalView().environmentObject(journalModel)
+                .tabItem {
+                    Image(systemName: "heart")
+                    Text("Favourite")
+                }
+        }
     }
 }
 

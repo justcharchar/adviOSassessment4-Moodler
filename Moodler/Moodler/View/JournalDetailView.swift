@@ -14,11 +14,13 @@ struct JournalDetailView: View {
     
     @ObservedObject var journal: JournalEntry
     
-    @State private var showImagePicker: Bool = false
+    @State private var showImageSearchPicker: Bool = false
+    @State private var showUserLibraryPicker: Bool = false
+    @State private var selectedUIImage: UIImage?
     @State private var coverImageURL: String?
     @State var showDatePicker: Bool = false
     @State var showDeleteAlert: Bool = false
-    
+ 
     
     var body: some View {
 
@@ -131,9 +133,30 @@ struct JournalDetailView: View {
                     }
                     
                     
-                    ZStack(alignment: .bottomTrailing) {
+                    ZStack(alignment: .topTrailing) {
                         
-                        if let urlString = coverImageURL, let url = URL(string: urlString) {
+                        if let uiImage = selectedUIImage {
+                            
+                            // Show the selected image
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 200)
+                                .cornerRadius(15)
+                                .clipped()
+
+                            Button {
+                                selectedUIImage = nil
+                                coverImageURL = nil
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .padding(7)
+                                    .background(Circle().fill(Color.white.opacity(0.8)))
+                                    .shadow(radius: 2)
+                            }
+                            .padding([.top, .trailing], 8)
+  
+                        } else if let urlString = coverImageURL, let url = URL(string: urlString) {
                             AsyncImage(url: url) { image in
                                 image.resizable()
                                     .scaledToFill()
@@ -145,33 +168,52 @@ struct JournalDetailView: View {
                                     .frame(height: 200)
                             }
                             
+                            
                             Button {
-                                showImagePicker = true
+                                selectedUIImage = nil
+                                coverImageURL = nil
                             } label: {
-                                Image(systemName: "square.and.pencil")
-                                    .padding(5)
+                                Image(systemName: "xmark")
+                                    .padding(7)
                                     .background(Circle().fill(Color.white.opacity(0.8)))
+                                    .shadow(radius: 2)
                             }
-                            .padding(.trailing, 10)
-                            .padding(.bottom, 10)
+                            .padding([.top, .trailing], 8)
 
                         } else {
-                            HStack {
+                            VStack(spacing: 30) {
                                 Button {
-                                    showImagePicker = true
+                                    showUserLibraryPicker = true
                                 } label: {
                                     Image(systemName: "photo")
-                                    Text("Select Photo")
+                                    Text("Choose from Library")
                                 }
-                                .foregroundStyle(.teal)
                                 .frame(maxWidth: .infinity)
+                                
+                                Button {
+                                    showImageSearchPicker = true
+                                } label: {
+                                    Image(systemName: "magnifyingglass")
+                                    Text("Search Image")
+                                }
+                               
                             }
+                            
+                            
                             .frame(height: 200)
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(15)
+                            
+                            
+                            
+                            
                         }
+                       
                     }
-                    .sheet(isPresented: $showImagePicker) {
+                    .sheet(isPresented: $showUserLibraryPicker) {
+                        ImagePicker(image: $selectedUIImage)
+                    }
+                    .sheet(isPresented: $showImageSearchPicker) {
                         ImagePickerView(journalModel: journalModel) { photo in
                             journal.imageURL = photo.src.large
                             coverImageURL = photo.src.large

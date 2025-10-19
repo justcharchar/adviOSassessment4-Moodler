@@ -25,7 +25,7 @@ struct FavouriteJournalView: View {
                         VStack(spacing: 16) {
                             Image(systemName: "heart.slash")
                                 .font(.system(size: 50))
-                                .foregroundColor(.gray)
+                                .foregroundColor(.pink)
                             Text("You currently have no favourited journals")
                                 .foregroundColor(.gray)
                         }

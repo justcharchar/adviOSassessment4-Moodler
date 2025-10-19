@@ -44,7 +44,7 @@ struct HomeView: View {
             .navigationTitle("My Journal")
             .navigationBarItems(trailing: settingsButton)
             .background(Color(.systemGroupedBackground))
-            .sheet(isPresented: $showJournalEntry) {
+            .fullScreenCover(isPresented: $showJournalEntry) {
                 if let draft = journalModel.draftJournal {
                     JournalDetailView(journal: draft)
                         .environmentObject(journalModel)
@@ -104,6 +104,7 @@ struct HomeView: View {
     // MARK: - Quick Journal Button
     private var quickJournalButton: some View {
         Button(action: {
+            journalModel.addJournal()
             showJournalEntry = true
         }) {
             HStack {
