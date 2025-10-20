@@ -25,7 +25,7 @@ struct MainTabView: View {
                     Label("Insights", systemImage: "chart.bar")
                 }
             
-            Text("Favourites")
+            FavouriteJournalView()
                 .tabItem {
                     Label("Favourites", systemImage: "heart.fill")
                 }

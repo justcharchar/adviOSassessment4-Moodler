@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit // NEW: for haptics
 
 struct LoginSignupView: View {
     @AppStorage("isSignedUp") private var isSignedUp = false
@@ -26,7 +27,10 @@ struct LoginSignupView: View {
     @State private var showImagePicker = false
     @State private var tempBirthdate = Date()
     @State private var showLoginError = false
-    
+
+    @State private var birthdateSelected = false
+    @State private var showBirthdateError = false
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -82,10 +86,23 @@ struct LoginSignupView: View {
                         TextField("Goal (optional)", text: $goal)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
-                        
-                        DatePicker("Birthdate", selection: $tempBirthdate, displayedComponents: .date)
-                            .datePickerStyle(.wheel)
-                            .padding(.horizontal)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            DatePicker("Birthdate", selection: $tempBirthdate, displayedComponents: .date)
+                                .datePickerStyle(.wheel)
+                                .padding(.horizontal)
+                                .onChange(of: tempBirthdate) { _ in
+                                    birthdateSelected = true
+                                    showBirthdateError = false
+                                }
+
+                            if showBirthdateError || (!birthdateSelected) {
+                                Text("Birthdate is required")
+                                    .foregroundColor(.red)
+                                    .font(.footnote)
+                                    .padding(.horizontal)
+                            }
+                        }
                     } else {
                         TextField("Username", text: $inputUsername)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -134,25 +151,38 @@ struct LoginSignupView: View {
     // MARK: - Handle Login / Signup
     private func handleAction() {
         if isSignup {
+            if !birthdateSelected {
+                let h = UINotificationFeedbackGenerator()
+                h.notificationOccurred(.error)
+                showBirthdateError = true
+                return
+            }
             if !username.isEmpty && !password.isEmpty {
                 savedPassword = password
                 birthdate = tempBirthdate
                 joinedDate = formattedDate(Date())
-                
                 isSignedUp = true
                 isLoggedIn = true
+                let h = UINotificationFeedbackGenerator()
+                h.notificationOccurred(.success)
             }
         } else {
             if inputUsername == username && password == savedPassword {
                 isLoggedIn = true
+                let h = UINotificationFeedbackGenerator()
+                h.notificationOccurred(.success)
             } else {
                 showLoginError = true
+                let h = UINotificationFeedbackGenerator()
+                h.notificationOccurred(.error)
             }
         }
     }
 
     private func clearForm() {
         password = ""
+        showBirthdateError = false 
+        birthdateSelected = false
         if isSignup {
             username = ""
             bio = ""

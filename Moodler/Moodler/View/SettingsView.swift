@@ -24,6 +24,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
+                
                 // PROFILE
                 Section(header: Text("Profile")) {
                     NavigationLink {
@@ -58,6 +59,21 @@ struct SettingsView: View {
                                 .foregroundColor(Color(.tertiaryLabel))
                         }
                         .contentShape(Rectangle())
+                    }
+
+                    // Goal
+                    NavigationLink {
+                        GoalView()
+                    } label: {
+                        HStack {
+                            Text("Your Goal")
+                            Spacer()
+                            Text(goal.isEmpty ? "Not set" : goal)
+                                .foregroundColor(goal.isEmpty ? .secondary : .primary)
+                                .lineLimit(1)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color(.tertiaryLabel))
+                        }
                     }
                 }
 

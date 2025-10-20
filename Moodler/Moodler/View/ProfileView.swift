@@ -8,20 +8,16 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // Profile values
     @AppStorage("username") private var username = ""
     @AppStorage("bio") private var bio = ""
-    @AppStorage("goal") private var goal = ""
     @AppStorage("birthdate") private var birthdate = Date.distantPast
     @AppStorage("age") private var age = ""
     @AppStorage("joinedDate") private var joinedDate = ""
     @AppStorage("profileImageData") private var profileImageData: Data?
 
-    // Edit-mode values
     @State private var isEditing = false
     @State private var tempUsername = ""
     @State private var tempBio = ""
-    @State private var tempGoal = ""
     @State private var tempBirthdate = Date()
     @State private var showImagePicker = false
     @State private var tempImage: UIImage? = nil
@@ -34,7 +30,6 @@ struct ProfileView: View {
         ScrollView {
             VStack(spacing: 30) {
 
-                // MARK: - Profile Image
                 ZStack {
                     Circle()
                         .fill(Color(.systemGray6))
@@ -75,7 +70,6 @@ struct ProfileView: View {
                         }
                 }
 
-                // MARK: - Username
                 ZStack {
                     Text(username.isEmpty ? "No username set" : username)
                         .opacity(isEditing ? 0 : 1)
@@ -90,7 +84,6 @@ struct ProfileView: View {
                 .frame(height: titleHeight)
                 .padding(.horizontal, 24)
 
-                // MARK: - Bio
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Bio")
                         .font(.headline)
@@ -113,15 +106,7 @@ struct ProfileView: View {
                     .padding(.horizontal)
                 }
 
-                // MARK: - Info Section
                 VStack(spacing: 16) {
-                    stableRow(
-                        label: "Goal",
-                        placeholder: "Not set",
-                        text: $tempGoal,
-                        savedValue: goal
-                    )
-
                     birthdateRow()
                     autoAgeRow()
 
@@ -134,6 +119,7 @@ struct ProfileView: View {
                             .frame(width: trailingValueWidth, alignment: .trailing)
                     }
                     .padding(.horizontal)
+                    .padding(.vertical, 6)
                 }
                 .padding()
                 .background(Color(.systemGray6))
@@ -157,57 +143,24 @@ struct ProfileView: View {
         .onAppear {
             tempUsername = username
             tempBio = bio
-            tempGoal = goal
             tempBirthdate = birthdate == Date.distantPast ? Date() : birthdate
         }
     }
 
-    // MARK: - Edit Mode
     private func toggleEditMode() {
         if isEditing {
             if let img = tempImage,
                let data = img.jpegData(compressionQuality: 0.8) {
                 profileImageData = data
             }
-
             username = tempUsername
             bio = tempBio
-            goal = tempGoal
             birthdate = tempBirthdate
             age = calculateAge(from: birthdate)
         }
         withAnimation { isEditing.toggle() }
     }
 
-    @ViewBuilder
-    private func stableRow(
-        label: String,
-        placeholder: String,
-        text: Binding<String>,
-        savedValue: String
-    ) -> some View {
-        HStack {
-            Text("\(label):")
-                .font(.headline)
-            Spacer()
-            ZStack(alignment: .trailing) {
-                TextField("Enter \(label.lowercased())", text: text)
-                    .textInputAutocapitalization(.sentences)
-                    .disableAutocorrection(true)
-                    .multilineTextAlignment(.trailing)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .opacity(isEditing ? 1 : 0)
-
-                Text(savedValue.isEmpty ? placeholder : savedValue)
-                    .foregroundColor(savedValue.isEmpty ? .secondary : .primary)
-                    .opacity(isEditing ? 0 : 1)
-            }
-            .frame(width: trailingValueWidth, alignment: .trailing)
-        }
-        .padding(.horizontal)
-    }
-
-    // MARK: - Birthdate Row
     @ViewBuilder
     private func birthdateRow() -> some View {
         HStack {
@@ -217,7 +170,7 @@ struct ProfileView: View {
 
             ZStack(alignment: .trailing) {
                 DatePicker("", selection: $tempBirthdate, displayedComponents: .date)
-                    .datePickerStyle(.compact)
+                        .datePickerStyle(.compact)
                     .labelsHidden()
                     .opacity(isEditing ? 1 : 0)
 
@@ -230,7 +183,6 @@ struct ProfileView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Age Row
     @ViewBuilder
     private func autoAgeRow() -> some View {
         HStack {
