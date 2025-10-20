@@ -7,8 +7,10 @@
 
 import SwiftUI
 import CoreData
+import CoreML
 
 struct JournalDetailView: View {
+    
     @EnvironmentObject var journalModel: JournalViewModel
     @Environment(\.dismiss) var dismiss
     
@@ -18,8 +20,8 @@ struct JournalDetailView: View {
     @State private var showUserLibraryPicker: Bool = false
     @State private var selectedUIImage: UIImage?
     @State private var coverImageURL: String?
-    @State var showDatePicker: Bool = false
     @State var showDeleteAlert: Bool = false
+    
  
     
     var body: some View {
@@ -27,7 +29,7 @@ struct JournalDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 
-                // MARK: Top Menu
+                // MARK: TOP MENU
                 HStack {
                     
                     // Back button
@@ -123,19 +125,29 @@ struct JournalDetailView: View {
                     Divider()
                     
                     HStack {
-                        // MOOD ANALYSIS - MACHINE LEARNING
+                        
+                        // MARK: MACHINE LEARNING TEXT CLASSIFICATION
                         Button {
-                            
+                            journalModel.predictMood(for: journal)
+
                         } label: {
-                            Text("Mood Analysis")
-                            Image(systemName: "brain")
+                            if let mood = journal.emotion {
+                                Text("Predicted Mood: \(mood)")
+                                Image(systemName: "arrow.clockwise")
+                            } else {
+                                Text("Mood Analysis")
+                                Image(systemName: "brain")
+                            }
                         }
+                        .disabled((journal.content ?? "").isEmpty)
+                        .opacity((journal.content ?? "").isEmpty ? 0.5 : 1)
                         .font(.subheadline)
                         .foregroundColor(.purple)
                         .padding(8)
                         .background(Color.purple.opacity(0.1))
                         .cornerRadius(15)
-                        
+                            
+                            
                         Spacer()
                         
                         Button {
@@ -150,9 +162,8 @@ struct JournalDetailView: View {
                         .background(Color.green.opacity(0.1))
                         .cornerRadius(15)
                     }
-                   
                     
-                    // MARK: Inserting image into journal
+                    // MARK: INSERTING IMAGE - From user library or image API
                     
                     ZStack(alignment: .topTrailing) {
                 
@@ -230,12 +241,11 @@ struct JournalDetailView: View {
                             .cornerRadius(15)
                         }
                     }
-                    
                     .onAppear {
                         coverImageURL = journal.imageURL
                     }
                     
-                    // MARK: Journal Content
+                    // MARK: JOURNAL CONTENT
                     TextEditor(text: Binding (
                         get: { journal.content ?? ""},
                         set: { journal.content = $0 }
@@ -274,14 +284,12 @@ struct JournalDetailView: View {
                 
             }
             .padding(.horizontal)
-          
-            
+
         }
         .navigationBarBackButtonHidden(true)
     
     }
-    
-    
+
 }
 
 // Date display style

@@ -34,8 +34,11 @@ struct FavouriteJournalView: View {
                         
                         // Displaying the favourited journals
                         ForEach(favouriteJournals, id: \.objectID) { journal in
-                            JournalDisplayView(journal: journal)
-                                .environmentObject(journalModel)
+                            NavigationLink(destination: JournalDetailView(journal: journal)
+                                .environmentObject(journalModel)) {
+                                    JournalDisplayView(journal: journal)
+                                }
+                        
                         }
                     }
                 }

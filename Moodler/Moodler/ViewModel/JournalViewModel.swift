@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import SwiftUI
+import CoreML
 
 class JournalViewModel: ObservableObject {
     let context = PersistenceController.shared.container.viewContext
@@ -15,8 +16,16 @@ class JournalViewModel: ObservableObject {
     @Published var entries: [JournalEntry] = [] // Entries from core data
     @Published var draftJournal: JournalEntry? // Draft of journal before saving
     
+    private var moodModel: MoodClassifier?
+    
     init() {
         fetchJournals()
+        
+        do {
+            moodModel = try MoodClassifier(configuration: MLModelConfiguration())
+        } catch {
+            print("Failed to load model: \(error)")
+        }
     }
     
     // MARK: Saving and Fetching Context
@@ -127,5 +136,22 @@ class JournalViewModel: ObservableObject {
                 }
             }.resume()
         }
+    
+    // MARK: MACHINE LEARNING MODEL
+    
+    func predictMood(for journal: JournalEntry) {
+        guard let text = journal.content, !text.isEmpty else { return }
+        
+        do {
+            let model = try MoodClassifier(configuration: MLModelConfiguration())
+            let prediction = try model.prediction(text: text)
+            
+            journal.emotion = prediction.label
+            saveContext()
+            
+        } catch {
+            print("Error predicting mood: \(error)")
+        }
+    }
 
 }
