@@ -15,6 +15,8 @@ struct ImagePickerView: View {
     
     let onSelect: (Photo) -> Void
 
+        // MARK: - Image Picker View for Image API
+    
         var body: some View {
             NavigationStack {
                 VStack {

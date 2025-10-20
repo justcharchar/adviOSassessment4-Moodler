@@ -29,7 +29,7 @@ struct JournalDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 
-                // MARK: TOP MENU
+                // MARK: - TOP MENU
                 HStack {
                     
                     // Back button
@@ -125,7 +125,7 @@ struct JournalDetailView: View {
                     
                     HStack {
                         
-                        // MARK: MACHINE LEARNING TEXT CLASSIFICATION
+                        // MARK: - MACHINE LEARNING TEXT CLASSIFICATION
                         Button {
                             journalModel.predictMood(for: journal)
 
@@ -162,7 +162,7 @@ struct JournalDetailView: View {
                         .cornerRadius(15)
                     }
                     
-                    // MARK: INSERTING IMAGE - From user library or image API
+                    // MARK: - INSERTING IMAGE - From user library or image API
                     
                     ZStack(alignment: .topTrailing) {
                 
@@ -244,7 +244,7 @@ struct JournalDetailView: View {
                         coverImageURL = journal.imageURL
                     }
                     
-                    // MARK: JOURNAL CONTENT
+                    // MARK: - JOURNAL CONTENT
                     TextEditor(text: Binding (
                         get: { journal.content ?? ""},
                         set: { journal.content = $0 }

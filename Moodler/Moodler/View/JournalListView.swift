@@ -27,6 +27,7 @@ struct JournalListView: View {
                         }
                         .padding(.top, 50)
                     } else {
+                        
                         // Displays all of the users journals
                         ForEach(journalModel.entries, id: \.objectID) { journal in
                             NavigationLink(destination: JournalDetailView(journal: journal)

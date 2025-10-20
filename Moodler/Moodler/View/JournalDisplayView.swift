@@ -84,6 +84,8 @@ struct JournalDisplayView: View {
                 Spacer()
                 
                 HStack {
+                    
+                    // Favourite button
                     Button(action: {
                         withAnimation {
                             journalModel.toggleFavourite(for: journal)
@@ -92,13 +94,16 @@ struct JournalDisplayView: View {
                         Image(systemName: journalModel.isFavourite(journal: journal) ? "heart.fill" : "heart")
                             .foregroundColor(.pink)
                     }
-
+                    
+                    // Delete button
                     Button(action: {
                         showDeleteAlert = true
                     }) {
                         Image(systemName: "trash")
                             .foregroundColor(.red)
                     }
+                    
+                    // Delete confirmation 
                     .alert(isPresented: $showDeleteAlert) {
                         Alert(
                             title: Text("Delete Journal"),
