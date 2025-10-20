@@ -87,8 +87,7 @@ struct JournalDetailView: View {
                     if let title = journal.title, let content = journal.content {
                         ShareLink(
                             item: "\(title)\n\n\(content)",
-                            subject: Text("Check out my journal entry!"),
-                            message: Text("Here's one of my journal entries from Moodler")
+                            subject: Text("Check out my journal entry!")
                         ) {
                             Image(systemName: "square.and.arrow.up")
                                 .font(.title3)
