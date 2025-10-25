@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CCE753D42EACC551005FD01E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE753C22EACC551005FD01E /* SwiftUI.framework */; };
+		CCE753D72EACC551005FD01E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE753C02EACC551005FD01E /* WidgetKit.framework */; };
+		CCE755C82EACC551005FD01E /* MoodlerWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CCE753BE2EACC551005FD01E /* MoodlerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		89BABA582E9FAE5A007EF545 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,17 +27,25 @@
 			remoteGlobalIDString = 89BABA3F2E9FAE59007EF545;
 			remoteInfo = Moodler;
 		};
+		CCE753CC2EACC551005FD01E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89BABA382E9FAE59007EF545 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCE753BD2EACC551005FD01E;
+			remoteInfo = MoodlerWidgetExtensionExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CCE7534F2EACC551005FD01E /* Embed Foundation Extensions */ = {
+		CCE755C62EACC551005FD01E /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				CCE755C82EACC551005FD01E /* MoodlerWidget.appex in Embed App Extensions */,
 			);
-			name = "Embed Foundation Extensions";
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -40,6 +54,9 @@
 		89BABA402E9FAE59007EF545 /* Moodler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moodler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89BABA572E9FAE5A007EF545 /* MoodlerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoodlerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		89BABA612E9FAE5A007EF545 /* MoodlerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoodlerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCE753BE2EACC551005FD01E /* MoodlerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MoodlerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCE753C02EACC551005FD01E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		CCE753C22EACC551005FD01E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -49,6 +66,13 @@
 				Info.plist,
 			);
 			target = 89BABA3F2E9FAE59007EF545 /* Moodler */;
+		};
+		CCE753D22EACC551005FD01E /* Exceptions for "MoodlerWidgetExtension" folder in "MoodlerWidget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CCE753BD2EACC551005FD01E /* MoodlerWidget */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -69,6 +93,14 @@
 		89BABA642E9FAE5A007EF545 /* MoodlerUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MoodlerUITests;
+			sourceTree = "<group>";
+		};
+		CCE753C42EACC551005FD01E /* MoodlerWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CCE753D22EACC551005FD01E /* Exceptions for "MoodlerWidgetExtension" folder in "MoodlerWidget" target */,
+			);
+			path = MoodlerWidgetExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -95,6 +127,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCE753BB2EACC551005FD01E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCE753D42EACC551005FD01E /* SwiftUI.framework in Frameworks */,
+				CCE753D72EACC551005FD01E /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -104,6 +145,8 @@
 				89BABA422E9FAE59007EF545 /* Moodler */,
 				89BABA5A2E9FAE5A007EF545 /* MoodlerTests */,
 				89BABA642E9FAE5A007EF545 /* MoodlerUITests */,
+				CCE753C42EACC551005FD01E /* MoodlerWidgetExtension */,
+				CCE753BF2EACC551005FD01E /* Frameworks */,
 				89BABA412E9FAE59007EF545 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,8 +157,18 @@
 				89BABA402E9FAE59007EF545 /* Moodler.app */,
 				89BABA572E9FAE5A007EF545 /* MoodlerTests.xctest */,
 				89BABA612E9FAE5A007EF545 /* MoodlerUITests.xctest */,
+				CCE753BE2EACC551005FD01E /* MoodlerWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CCE753BF2EACC551005FD01E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CCE753C02EACC551005FD01E /* WidgetKit.framework */,
+				CCE753C22EACC551005FD01E /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,11 +181,12 @@
 				89BABA3C2E9FAE59007EF545 /* Sources */,
 				89BABA3D2E9FAE59007EF545 /* Frameworks */,
 				89BABA3E2E9FAE59007EF545 /* Resources */,
-				CCE7534F2EACC551005FD01E /* Embed Foundation Extensions */,
+				CCE755C62EACC551005FD01E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CCE753CD2EACC551005FD01E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				89BABA422E9FAE59007EF545 /* Moodler */,
@@ -190,6 +244,28 @@
 			productReference = 89BABA612E9FAE5A007EF545 /* MoodlerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		CCE753BD2EACC551005FD01E /* MoodlerWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCE753CF2EACC551005FD01E /* Build configuration list for PBXNativeTarget "MoodlerWidget" */;
+			buildPhases = (
+				CCE753BA2EACC551005FD01E /* Sources */,
+				CCE753BB2EACC551005FD01E /* Frameworks */,
+				CCE753BC2EACC551005FD01E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CCE753C42EACC551005FD01E /* MoodlerWidgetExtension */,
+			);
+			name = MoodlerWidget;
+			packageProductDependencies = (
+			);
+			productName = MoodlerWidgetExtensionExtension;
+			productReference = CCE753BE2EACC551005FD01E /* MoodlerWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -211,6 +287,9 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 89BABA3F2E9FAE59007EF545;
 					};
+					CCE753BD2EACC551005FD01E = {
+						CreatedOnToolsVersion = 16.3;
+					};
 				};
 			};
 			buildConfigurationList = 89BABA3B2E9FAE59007EF545 /* Build configuration list for PBXProject "Moodler" */;
@@ -230,6 +309,7 @@
 				89BABA3F2E9FAE59007EF545 /* Moodler */,
 				89BABA562E9FAE5A007EF545 /* MoodlerTests */,
 				89BABA602E9FAE5A007EF545 /* MoodlerUITests */,
+				CCE753BD2EACC551005FD01E /* MoodlerWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -250,6 +330,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		89BABA5F2E9FAE5A007EF545 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCE753BC2EACC551005FD01E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -280,6 +367,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCE753BA2EACC551005FD01E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -292,6 +386,11 @@
 			isa = PBXTargetDependency;
 			target = 89BABA3F2E9FAE59007EF545 /* Moodler */;
 			targetProxy = 89BABA622E9FAE5A007EF545 /* PBXContainerItemProxy */;
+		};
+		CCE753CD2EACC551005FD01E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CCE753BD2EACC551005FD01E /* MoodlerWidget */;
+			targetProxy = CCE753CC2EACC551005FD01E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -319,7 +418,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Moodler.Moodler;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owenherianto.Moodler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -350,7 +449,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Moodler.Moodler;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owenherianto.Moodler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -545,6 +644,62 @@
 			};
 			name = Release;
 		};
+		CCE753D02EACC551005FD01E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ML4XBAVU56;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MoodlerWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MoodlerWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owenherianto.Moodler.MoodlerWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CCE753D12EACC551005FD01E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ML4XBAVU56;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MoodlerWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MoodlerWidgetExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owenherianto.Moodler.MoodlerWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -580,6 +735,15 @@
 			buildConfigurations = (
 				89BABA732E9FAE5A007EF545 /* Debug */,
 				89BABA742E9FAE5A007EF545 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCE753CF2EACC551005FD01E /* Build configuration list for PBXNativeTarget "MoodlerWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCE753D02EACC551005FD01E /* Debug */,
+				CCE753D12EACC551005FD01E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

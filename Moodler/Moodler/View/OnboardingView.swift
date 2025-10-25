@@ -41,15 +41,10 @@ struct OnboardingView: View {
 
                 // MARK: - Image Card
                 ZStack {
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(cardColor)
-                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
-                        .frame(maxWidth: 320, maxHeight: 320)
-
                     Image(pages[currentPage].imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: 260, maxHeight: 260)
+                        .frame(maxWidth: 260, maxHeight: 350)
                         .cornerRadius(20)
                         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                         .animation(.easeInOut, value: currentPage)
